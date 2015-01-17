@@ -56,7 +56,6 @@ class MusicGenerator(object):
         try:
             p = pattern[1]
         except:
-            print path
             p = pattern
         # print p
         for musicEvent in p:
@@ -116,7 +115,10 @@ class MusicGenerator(object):
             #     # @TODO: Naively biased for now to keep next note away different note
             #     noteProbablityList.pop(noteProbablityList.index(lastNote))
             nextNote = random.choice(noteProbablityList)
-            while self.pitchMatrix[nextNote] == [] or (nextNote == lastNote and nextNote == noteProbablityList[-2]):
+            #  or (nextNote == lastNote and nextNote == noteProbablityList[-2]
+            # work on repetitions
+            while (self.pitchMatrix[nextNote] == [] or
+                    (nextNote == lastNote and nextNote == noteProbablityList[-2])):
                 nextNote = random.choice(noteProbablityList)
             # print generatedMusicNotes, noteProbablityList, nextNote
             generatedMusicNotes.append(nextNote)
@@ -124,14 +126,14 @@ class MusicGenerator(object):
         # print generatedMusicNotes
         return generatedMusicNotes
 
-    def createMIDIFromNotesList(self, notes, nameOfGeneratedFile = "example10.mid"):
+    def createMIDIFromNotesList(self, notes, nameOfGeneratedFile = "example.mid",
+                                tickVal = 150):
         pattern = midi.Pattern()
         # Instantiate a MIDI Track (contains a list of MIDI events)
         track = midi.Track()
         # Append the track to the pattern
         pattern.append(track)
         # Instantiate a MIDI note on event, append it to the track
-        tickVal = 200
         for note in notes:
             on = midi.NoteOnEvent(tick=0, velocity=70, pitch=note)
             track.append(on)
@@ -148,17 +150,23 @@ class MusicGenerator(object):
         midi.write_midifile("generatedMidiFiles/%s"%nameOfGeneratedFile, pattern)
 
     def train(self, path):
-        for filename in os.listdir(path):
-            if filename.endswith("mid") or filename.endswith("midi"):
-                self.trainMIDIFileFromPath(path + os.sep + filename)
+        if not os.path.isdir(path):
+            if path.endswith("mid") or path.endswith("midi"):
+                # print os.path.basename(path)
+                self.trainMIDIFileFromPath(path)
+        else:
+            for filename in os.listdir(path):
+                self.train(path + os.sep + filename)
+        # at this point could save matrix to text file
+        # so don't have to train all the time
         
 
 
 m = MusicGenerator()
 # m.trainMIDIFile("trainingMidiFiles/Beatles1HB.mid")
 # m.trainMIDIFileFromPath("trainingMidiFiles/happy_birthday.mid")
-m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/mendellson")
-soundFile = m.createMIDIFromNotesList(m.generateMusic(100), "mendellsonGeneratedMidi2.mid")
+m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1")
+soundFile = m.createMIDIFromNotesList(m.generateMusic(100), "canonPlusHappyBirthday.mid")
 
 
 
