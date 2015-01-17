@@ -2,7 +2,7 @@
 # learning to generate completely new music on it's own
 # all music training and generation is done in midi format
 
-import midi, random
+import midi, random, os
 
 
 # @TODO Figure out how to deal with velocity, and ticks
@@ -75,7 +75,7 @@ class MusicGenerator(object):
                 # print "finished"
         return pitches, velocities, ticks
 
-    def trainMIDIFile(self, path):
+    def trainMIDIFileFromPath(self, path):
         pitches, velocities, ticks = self.parseMIDIFile(path)
         self.trainPitchesFromMIDIFile(pitches)
 
@@ -118,7 +118,7 @@ class MusicGenerator(object):
         # print generatedMusicNotes
         return generatedMusicNotes
 
-    def createMIDIFromNotesList(self, notes):
+    def createMIDIFromNotesList(self, notes, nameOfGeneratedFile = "example10.mid"):
         pattern = midi.Pattern()
         # Instantiate a MIDI Track (contains a list of MIDI events)
         track = midi.Track()
@@ -139,12 +139,20 @@ class MusicGenerator(object):
         # Print out the pattern
         # print pattern
         # Save the pattern to disk
-        midi.write_midifile("generatedMidiFiles/example-variable-tick.mid", pattern)
+        midi.write_midifile("generatedMidiFiles/%s"%nameOfGeneratedFile, pattern)
+
+    def train(self, path):
+        for filename in os.listdir(path):
+            if filename.endswith("mid") or filename.endswith("midi"):
+                self.trainMIDIFileFromPath(path + os.sep + filename)
+        
 
 
 m = MusicGenerator()
 # m.trainMIDIFile("trainingMidiFiles/Beatles1HB.mid")
-m.trainMIDIFile("trainingMidiFiles/happy_birthday.mid")
-soundFile = m.createMIDIFromNotesList(m.generateMusic(100))
+# m.trainMIDIFileFromPath("trainingMidiFiles/happy_birthday.mid")
+m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1")
+soundFile = m.createMIDIFromNotesList(m.generateMusic(1000), "bigmidifile.mid")
+
 
 
