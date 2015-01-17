@@ -118,6 +118,10 @@ class Board(object):
         self.fillGoodMusicNotesInBoard()
         Board.print2dList(self.board)
 
+    def numRows(self): return self.rows
+    
+    def numCols(self): return self.cols
+
     def __init__(self, rows = 50, columns = 3):
         self.rows, self.cols = rows, columns
         self.board = Board.make2dList(rows, columns)
@@ -126,6 +130,3 @@ class Board(object):
         # self.curRow = 0 # current row of the player indexed from zero for convenience
         # self.playerTimeTakenToCoverOneRow = 2 # seconds
         # self.playerSpeed = 1.0/ self.playerTimeTakenToCoverOneRow
-
-
-Board()

@@ -6,12 +6,14 @@ from pygame.locals import *
 from animationSkeleton import AnimationSkeleton
 from obstaclesAndMusicNotes import Obstacle, MusicNote
 from player	import Player
+from board import Board
 
 class MusicDash(AnimationSkeleton):
 
 	def initAnimation(self):
 		self.margin = 50
-		self.obstacles = [Obstacle(self.width/2.0, self.height/2.0)]
+		self.board = Board()
+		self.obstacles = [Obstacle(self.width/2.0, self.height/2.0, 1, 1)]
 		self.player = Player(self.width/2.0, self.height - self.margin)
 		self.screen.fill((255, 255, 255))
 
@@ -28,7 +30,7 @@ class MusicDash(AnimationSkeleton):
 	def moveObjects(self):
 		for obstacle in self.obstacles:
 			if not (self.isOffScreen(obstacle)):
-				obstacle.move(1, 1)
+				obstacle.move()
 
 	def onTick(self):
 

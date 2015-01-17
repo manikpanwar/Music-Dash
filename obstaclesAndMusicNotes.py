@@ -5,9 +5,10 @@ import pygame
 
 class Obstacle(object):
 
-	def __init__(self, x, y):
+	def __init__(self, x, y, dx, dy):
 		# creates surface with image of rest on it 
 		self.image = pygame.image.load("rest.png") 
+		self.image.convert_alpha()
 		self.imageRect = self.image.get_rect()
 		(self.imgWidth, self.imgHeight) = self.imageRect.size
 		self.obstacle = pygame.Surface((self.imgWidth, self.imgHeight))
@@ -17,11 +18,12 @@ class Obstacle(object):
 		self.rect = self.obstacle.get_rect() 
 		self.rect.centerx = x
 		self.rect.centery = y
+		(self.dx, self.dy) = (dx, dy)
 
-	def move(self, dx, dy):
+	def move(self):
 		# moves surface with image on it
-		self.rect.centerx += dx
-		self.rect.centery += dy
+		self.rect.centerx += self.dx
+		self.rect.centery += self.dy
 
 	def getRect(self): return self.rect
 
@@ -34,18 +36,20 @@ class Obstacle(object):
 
 class MusicNote(object):
 
-	def __init__(self, x, y):
-		self.image = pygame.image.load("rest.png") 
+	def __init__(self, x, y, dx, dy):
+		self.image = pygame.image.load("eighthNote.png") 
+		self.image.convert_alpha()
 		self.rect = self.image.get_rect()
 		(self.imgWidth, self.imgHeight) = self.rect.size
-		self.musicNote = pygame.Surface((self.imgWidth*2, self.imgHeight*2))
-		self.musicNote.blit(self.image, (self.rect.centerx, self.rect.centery))
+		self.musicNote = pygame.Surface((self.imgWidth, self.imgHeight))
+		self.musicNote.blit(self.image, (0,0))
 		self.rect.centerx = x
 		self.rect.centery = y
+		self.dx, self.dy = dx, dy
 
 	def move(self, dx, dy):
-		self.rect.centerx += dx
-		self.rect.centery += dy
+		self.rect.centerx += self.dx
+		self.rect.centery += self.dy
 
 	def getRect(self): return (self.rect.centerx, self.rect.centery)
 
