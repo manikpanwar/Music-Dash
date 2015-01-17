@@ -12,6 +12,38 @@ class Board(object):
             ls += [["empty"]*cols]
         return ls
 
+    @staticmethod
+    def maxItemLength(a):
+        # from 112 class website
+        maxLen = 0
+        rows = len(a)
+        cols = len(a[0])
+        for row in xrange(rows):
+            for col in xrange(cols):
+                maxLen = max(maxLen, len(str(a[row][col])))
+        return maxLen
+
+    @staticmethod
+    def print2dList(a):
+        # from 112 class website
+        if (a == []):
+            # So we don't crash accessing a[0]
+            print []
+            return
+        rows = len(a)
+        cols = len(a[0])
+        fieldWidth = Board.maxItemLength(a)
+        print "[ ",
+        for row in xrange(rows):
+            if (row > 0): print "\n  ",
+            print "[ ",
+            for col in xrange(cols):
+                if (col > 0): print ",",
+                # The next 2 lines print a[row][col] with the given fieldWidth
+                format = "%" + str(fieldWidth) + "s"
+                print format % str(a[row][col]),
+            print "]",
+        print "]"
 
 
     def colIsValidForNote(self, col1, col2):
@@ -19,14 +51,13 @@ class Board(object):
 
     def fillObstaclesInBoard(self):
         board = self.board
-        rows, cols = self.rows, self.columns
-        self.fillObstaclesInBoard()
+        rows, cols = self.rows, self.cols
         obstacleColumnsInPrevRow = []
         for row in xrange(1, rows):
             # weighting heavily for at least one obstacle
             numObstaclesInRow = random.choice([0, 1, 1, 2])
-            cols = [1 , 2, 3]
-            print numObstaclesInRow
+            cols = [0, 1, 2]
+            # print numObstaclesInRow
             if numObstaclesInRow == 1:
                 for col in cols:
                     if col not in obstacleColumnsInPrevRow:
@@ -36,7 +67,7 @@ class Board(object):
             elif numObstaclesInRow == 2:
                 col1 = col2 = -1
                 while(col1 == col2):
-                    col1, col2 = random.choice([1, 2, 3]), random.choice([1, 2, 3])
+                    col1, col2 = random.choice([0, 1, 2]), random.choice([0, 1, 2])
                 board[row][col1] = "obstacle"
                 board[row][col2] = "obstacle"
             else:
@@ -58,23 +89,31 @@ class Board(object):
         rows, cols = self.rows, self.cols
         prevNoteCol = 0
         for row in xrange(1, rows):
-            for col in xrange(cols):
-                if board[row][col] == "empty" and 
-                    self.colIsValidForNote(prevNoteCol, col):
+            c = [0, 1, 2]
+            random.shuffle(c)
+            # print c
+            for col in c:
+                # make sure good notes are well distributed
+                if (board[row][col] == "empty" and 
+                                    self.colIsValidForNote(prevNoteCol, col)):
                     self.board[row][col] = "good note"
+                    prevNoteCol = col
                     break
 
 
     def fillBoard(self):
         self.fillObstaclesInBoard()
         self.fillGoodMusicNotesInBoard()
+        Board.print2dList(self.board)
 
     def __init__(self, rows = 50, columns = 3):
         self.rows, self.cols = rows, columns
         self.board = Board.make2dList(rows, columns)
         self.fillBoard()
-        
+
         # self.curRow = 0 # current row of the player indexed from zero for convenience
         # self.playerTimeTakenToCoverOneRow = 2 # seconds
         # self.playerSpeed = 1.0/ self.playerTimeTakenToCoverOneRow
 
+
+Board()
