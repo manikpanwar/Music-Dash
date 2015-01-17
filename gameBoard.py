@@ -45,6 +45,18 @@ class Board(object):
             print "]",
         print "]"
 
+    def makeBoardEmpty(self):
+        for row in xrange(self.rows):
+            for col in xrange(self.cols):
+                self.board[row][col] = "empty"
+
+    def reInitGameBoard(self):
+        # function which can be called when we have rendered all the rows in the board 
+        # to randomly generate a new board, thereby extending it to
+        # infinite length
+        self.makeBoardEmpty()
+        self.fillObstaclesInBoard()
+        self.fillGoodMusicNotesInBoard()
 
     def colIsValidForNote(self, col1, col2):
         return abs(col1 - col2) <= 1
