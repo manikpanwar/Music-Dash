@@ -125,23 +125,25 @@ class MusicGenerator(object):
         # Append the track to the pattern
         pattern.append(track)
         # Instantiate a MIDI note on event, append it to the track
+        tickVal = 200
         for note in notes:
             on = midi.NoteOnEvent(tick=0, velocity=50, pitch=note)
             track.append(on)
             # Instantiate a MIDI note off event, append it to the track
-            off = midi.NoteOffEvent(tick=100, pitch=note)
+            off = midi.NoteOffEvent(tick=tickVal, pitch=note)
             track.append(off)
+            tickVal -= 1
         # Add the end of track event, append it to the track
         eot = midi.EndOfTrackEvent(tick=1)
         track.append(eot)
         # Print out the pattern
         # print pattern
         # Save the pattern to disk
-        midi.write_midifile("generatedMidiFiles/example.mid", pattern)
+        midi.write_midifile("generatedMidiFiles/example-variable-tick.mid", pattern)
 
 
 m = MusicGenerator()
-m.trainMIDIFile("trainingMidiFiles/Beatles1HB.mid")
+# m.trainMIDIFile("trainingMidiFiles/Beatles1HB.mid")
 m.trainMIDIFile("trainingMidiFiles/happy_birthday.mid")
 soundFile = m.createMIDIFromNotesList(m.generateMusic(100))
 
