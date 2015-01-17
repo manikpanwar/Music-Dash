@@ -53,7 +53,13 @@ class MusicGenerator(object):
         pattern = midi.read_midifile(path)
         # print pattern
         pitches, velocities, ticks = ([] , [], [])
-        for musicEvent in pattern[1]:
+        try:
+            p = pattern[1]
+        except:
+            print path
+            p = pattern
+        # print p
+        for musicEvent in p:
             if type(musicEvent) == midi.NoteOnEvent:
                 # note starts
                 # print musicEvent
@@ -106,11 +112,11 @@ class MusicGenerator(object):
         # MusicGenerator.print2dList(self.pitchMatrix)
         for index in xrange(numNotes-1): # already added one note
             noteProbablityList = self.pitchMatrix[lastNote]
-            if lastNote in noteProbablityList:
-                # @TODO: Naively biased for now to keep next note away different note
-                noteProbablityList.pop(noteProbablityList.index(lastNote))
+            # if lastNote in noteProbablityList:
+            #     # @TODO: Naively biased for now to keep next note away different note
+            #     noteProbablityList.pop(noteProbablityList.index(lastNote))
             nextNote = random.choice(noteProbablityList)
-            while self.pitchMatrix[nextNote] == []:
+            while self.pitchMatrix[nextNote] == [] or (nextNote == lastNote and nextNote == noteProbablityList[-2]):
                 nextNote = random.choice(noteProbablityList)
             # print generatedMusicNotes, noteProbablityList, nextNote
             generatedMusicNotes.append(nextNote)
@@ -127,7 +133,7 @@ class MusicGenerator(object):
         # Instantiate a MIDI note on event, append it to the track
         tickVal = 200
         for note in notes:
-            on = midi.NoteOnEvent(tick=0, velocity=50, pitch=note)
+            on = midi.NoteOnEvent(tick=0, velocity=70, pitch=note)
             track.append(on)
             # Instantiate a MIDI note off event, append it to the track
             off = midi.NoteOffEvent(tick=tickVal, pitch=note)
@@ -151,8 +157,8 @@ class MusicGenerator(object):
 m = MusicGenerator()
 # m.trainMIDIFile("trainingMidiFiles/Beatles1HB.mid")
 # m.trainMIDIFileFromPath("trainingMidiFiles/happy_birthday.mid")
-m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1")
-soundFile = m.createMIDIFromNotesList(m.generateMusic(1000), "bigmidifile.mid")
+m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/mendellson")
+soundFile = m.createMIDIFromNotesList(m.generateMusic(100), "mendellsonGeneratedMidi2.mid")
 
 
 
