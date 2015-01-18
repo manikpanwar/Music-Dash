@@ -9,7 +9,7 @@ from obstaclesAndMusicNotes import MusicNote
 from player	import Player
 from board import Board
 from lifeMeter import LifeMeter
-from musicGenerator import MusicGenerator
+from musicGenerator import MusicGenerator  
 
 class MusicDash(AnimationSkeleton):
 
@@ -24,8 +24,7 @@ class MusicDash(AnimationSkeleton):
 		self.trainingFilePath = "/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1/happy_birthday.mid"
 		self.m.train(self.trainingFilePath)
 		self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
-		self.board = Board(10).getBoard()
-		self.nextBoard = Board(10).getBoard()
+		self.board = Board().getBoard()
 		self.cx, self.cy = self.width/2.0, self.height/2.0
 		self.objectsOnScreen = []
 		self.player = Player(self.width/2.0, self.height - self.margin)
@@ -40,21 +39,41 @@ class MusicDash(AnimationSkeleton):
 		self.addObjects()
 		self.end = False
 		self.score = 0
+		self.scoreThreshold = 0
 		self.meter = LifeMeter()
+
+	def increaseVel(self, dx, dy):
+		if dx < 0: 
+			dx = max(dx - 1, -1/(3**.5)-5)
+		elif dx >0: 
+			dx = min(dx+1, (2/(3**.5))+5) 
+		dy = min(dy+1, 7) 
+		return (dx, dy)
+
+	def keepScore(self):
+		self.score += 10
+		temp = []
+		if self.score/200 > self.scoreThreshold:
+			self.scoreThreshold += 1
+			for dx, dy in self.velocityKey:
+				temp.append(self.increaseVel(dx, dy))
+			self.velocityKey = temp
 
 	def removeObjects(self):
 		i = 0
 		while (i < len(self.objectsOnScreen)):
 			obj = self.objectsOnScreen[i]
 			if self.isOffScreen(obj): 
+				if type(obj) == MusicNote:
+					self.meter.manageLife()
 				self.objectsOnScreen = self.objectsOnScreen[:i] + self.objectsOnScreen[i+1:]
 			elif self.player.isColliding(obj):
 				if type(obj) == MusicNote:
+					self.keepScore()
 					if not self.musicNotes:
 						self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
 					self.m.playNoteOneAtATime(self.musicNotes[0])
 					self.musicNotes = self.musicNotes[1:]
-					self.score += 10
 				self.meter.manageLife(obj)
 				self.objectsOnScreen = self.objectsOnScreen[:i] + self.objectsOnScreen[i+1:]
 			else:
@@ -62,7 +81,7 @@ class MusicDash(AnimationSkeleton):
 
 	def isOffScreen(self, obj):
 		(x, y) = obj.getLoc()
-		return not((0 <= x <= self.width) or (0 <= y <= self.height))
+		return y >= 525
 
 	def moveObjects(self):
 		for obstacle in self.objectsOnScreen:
@@ -75,17 +94,17 @@ class MusicDash(AnimationSkeleton):
 				self.objectsOnScreen.append(MusicNote(self.cx, self.cy, self.velocityKey[col]))
 			elif self.board[self.curRow][col] == "obstacle":
 				self.objectsOnScreen.append(Obstacle(self.cx, self.cy, self.velocityKey[col]))
-		self.curRow = (self.curRow + 1) % 10
+		self.curRow = (self.curRow + 1) % self.rows
 
 	def onTick(self):
+
 		if not self.end:
 			self.counter += 1
 			if self.counter/30 > self.time:
 				self.time += 1
 				if (self.endOfBoard()):
-					self.board = Board(10).getBoard()
+					self.board = Board().getBoard()
 					self.addObjects()
-					self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
 				else:
 					self.addObjects()
 			# elif self.counter/10 > self.resizeManager:
@@ -102,22 +121,34 @@ class MusicDash(AnimationSkeleton):
 	def endOfBoard(self):
 		return self.curRow == self.rows
 
+	def drawScore(self):
+		fontSize = 24
+		font = pygame.font.Font(None, fontSize)
+		text = font.render("%d" % self.score, 0, (0, 0, 0))
+		textpos = text.get_rect()
+		textpos.centerx = self.width/2.0
+		textpos.centery = self.margin
+		self.screen.blit(text, textpos)
+
 	def dealWithBlitting(self):
 		self.screen.fill((255, 255, 255))
+
 		for obj in self.objectsOnScreen:
 			obj.draw(self.screen)
 		self.meter.draw(self.screen)
 		self.player.draw(self.screen)
+		self.drawScore()
 
 	def onKeyDown(self, event):
+
 		if event.key == K_p: self.end = not(self.end)
 		elif event.key == K_s: 
 			for obj in self.objectsOnScreen:
 				obj.resize(self.FPS)
 
 	def run(self):
+
 		self.initAnimation()
-		pygame.display.set_caption("Music-Dash!")
 		while True:
 			# being able to hold down keys based on solution from stack overflow by qiao
 			keys = pygame.key.get_pressed()
@@ -155,4 +186,3 @@ class MusicDash(AnimationSkeleton):
 		
 app = MusicDash()
 app.run()
-
