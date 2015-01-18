@@ -50,7 +50,8 @@ class HelpGen(object):
         xsmallFontSize = 12
         xmarginX = 40
         xsmallfontObj = pygame.font.Font('RobotoCondensed-Regular.ttf', xsmallFontSize)
-        howToPlay = '* The goal is to eat up as many coins and avoid as many blocks as possible. Eating coins increases your score and hitting blocks decreases your score \n * The coins you earned will generate beautiful sound and the blocks you hit harm the generated sound'
+        howToPlay = '* The goal is to eat up as many coins and avoid as many blocks as possible. Eating coins increases your score and hitting blocks decreases your score \n\
+         * The coins you earned will generate beautiful sound.'
         textBox = pygame.Rect(xmarginX, oriY + bigGap + xsmallGap, screenX - 2 * xmarginX, 200)
         textLong = textrect.render_textrect(howToPlay, xsmallfontObj, textBox, WHITE, GRAY)
         screen.blit(textLong, textBox)

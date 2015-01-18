@@ -117,7 +117,7 @@ class Board(object):
     def fillBoard(self):
         self.fillObstaclesInBoard()
         self.fillGoodMusicNotesInBoard()
-        Board.print2dList(self.board)
+        # Board.print2dList(self.board)
 
     def numRows(self): return self.rows
 

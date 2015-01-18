@@ -39,6 +39,10 @@ class Player(object):
 	def move(self, dx, dy):
 		self.rect.centerx += dx
 		self.rect.centery += dy
+		if(self.rect.centerx > 500 - 20):
+			self.rect.centerx = 500 - 20
+		if(self.rect.centerx < 15):
+			self.rect.centerx = 15
 		# pygame.draw.circle(self.player, (0, 255, 0), (self.r, self.r), self.r, 0) # redraws circle
 
 	def draw(self, surface):

@@ -101,7 +101,7 @@ def splash():
     screenX = 500
     screenY = 400
     screen = pygame.display.set_mode((screenX, screenY))
-    pygame.display.set_caption('Runner Music Game v0.0 :)')
+    pygame.display.set_caption('Music Dash v0.0 :)')
 
     # background fill color
     background = pygame.Surface(screen.get_size())
