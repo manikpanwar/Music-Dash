@@ -12,6 +12,8 @@ class Obstacle(object):
 		self.imageRect = self.image.get_rect()
 		(self.imgWidth, self.imgHeight) = self.imageRect.size
 		self.obstacle = pygame.Surface((self.imgWidth, self.imgHeight))
+		# self.startW, self.startH = int(round(self.imgWidth/2.0)), int(round(self.imgHeight/2.0))
+		# self.obstacle = pygame.transform.smoothscale(self.obstacle, (self.startW, self.startH))
 		self.obstacle.set_colorkey((255,255,255))
 		# self.obstacle.fill((0, 0, 0))
 		self.obstacle.blit(self.image, (0,0))
@@ -23,15 +25,23 @@ class Obstacle(object):
 
 	def move(self):
 		# moves surface with image on it
-		print "vel", self.dx, self.dy
 		self.rect.centerx += self.dx
 		self.rect.centery += self.dy
-		print self.rect.centerx, self.rect.centery
 
 	def getRect(self): return self.rect
 
 	def getLoc(self): 
 		return (self.rect.centerx, self.rect.centery) # location
+
+	def resize(self, FPS):
+		# self.obstacle = pygame.transform.smoothscale(self.obstacle, ((int(round(self.imgWidth*ratio))), (int(round(self.imgHeight*ratio)))))
+		# self.obstacle = pygame.transform.smoothscale(self.obstacle, (int(round(self.imgWidth+1.0*self.imgWidth/FPS)), int(round(self.imgHeight+1.0*self.imgHeight/FPS))))
+		# self.imgWidth += 1.0*self.imgWidth/FPS
+		# self.imgHeight += 1.0*self.imgHeight/FPS
+		self.imgWidth *= 1.05 
+		self.imgHeight *= 1.05
+		# newSurface = pygame.Surface((int(round(self.imgWidth)), int(round(self.imgHeight))))
+		self.obstacle = pygame.transform.smoothscale(self.obstacle, (int(round(self.imgWidth)), int(round(self.imgHeight))))
 
 	def draw(self, surface):
 		# draws the local surface onto the main surface (the screen/bg) 
@@ -45,6 +55,8 @@ class MusicNote(object):
 		self.rect = self.image.get_rect()
 		(self.imgWidth, self.imgHeight) = self.rect.size
 		self.musicNote = pygame.Surface((self.imgWidth, self.imgHeight))
+		# self.startW, self.startH = int(round(self.imgWidth/2.0)), int(round(self.imgHeight/2.0))
+		# self.musicNote = pygame.transform.smoothscale(self.musicNote, (self.startW, self.startH))
 		self.musicNote.blit(self.image, (0,0))
 		self.musicNote.set_colorkey((255, 255, 255))
 		self.rect.centerx = x
@@ -52,12 +64,16 @@ class MusicNote(object):
 		self.dx, self.dy = vel
 
 	def move(self):
-		print "vel", self.dx, self.dy
 		self.rect.centerx += self.dx
 		self.rect.centery += self.dy
-		print self.rect.centerx, self.rect.centery
 
 	def getRect(self): return self.rect
+
+	def resize(self, FPS):
+		self.imgWidth += self.imgWidth/(2.0*FPS)
+		self.imgHeight += self.imgHeight/(2.0*FPS)
+		newSurface = pygame.Surface((int(round(self.imgWidth)), int(round(self.imgHeight))))
+		self.musicNote = pygame.transform.smoothscale(self.musicNote, (int(round(self.imgWidth)), int(round(self.imgHeight))), newSurface)
 
 	def getLoc(self): 
 		return (self.rect.centerx, self.rect.centery) # location

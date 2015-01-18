@@ -65,6 +65,7 @@ class Board(object):
         board = self.board
         rows, cols = self.rows, self.cols
         obstacleColumnsInPrevRow = []
+        board[0][0] = "obstacle"
         for row in xrange(1, rows):
             # weighting heavily for at least one obstacle
             numObstaclesInRow = random.choice([0, 1, 1, 2])
