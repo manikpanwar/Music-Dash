@@ -2,8 +2,9 @@
 # learning to generate completely new music on it's own
 # all music training and generation is done in midi format
 
-import midi, random, os
-
+import midi, random, os, pygame
+import pygame.midi, pygame.mixer
+from time import sleep
 
 # @TODO Figure out how to deal with velocity, and ticks
 # also when to do off
@@ -160,13 +161,36 @@ class MusicGenerator(object):
         # at this point could save matrix to text file
         # so don't have to train all the time
         
+    def playNoteOneAtATime(self, note, velocity = 127, tickVal = 150):
+        pattern = midi.Pattern()
+        # Instantiate a MIDI Track (contains a list of MIDI events)
+        track = midi.Track()
+        # Append the track to the pattern
+        pattern.append(track)
+        # Instantiate a MIDI note on event, append it to the track
+        on = midi.NoteOnEvent(tick=0, velocity=70, pitch=note)
+        track.append(on)
+        # Instantiate a MIDI note off event, append it to the track
+        off = midi.NoteOffEvent(tick=tickVal, pitch=note)
+        track.append(off)
+        # Add the end of track event, append it to the track
+        eot = midi.EndOfTrackEvent(tick=1)
+        track.append(eot)
+        # Save the pattern to disk
+        midi.write_midifile("generatedMidiFiles/%s"%"temp.mid", pattern)
+        pygame.init()
+        pygame.mixer.music.load("generatedMidiFiles/%s"%"temp.mid")
+        pygame.mixer.music.play()
 
 
 m = MusicGenerator()
 # m.trainMIDIFile("trainingMidiFiles/Beatles1HB.mid")
 # m.trainMIDIFileFromPath("trainingMidiFiles/happy_birthday.mid")
-m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1")
-soundFile = m.createMIDIFromNotesList(m.generateMusic(100), "canonPlusHappyBirthday.mid")
+
+# m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1")
+# soundFile = m.createMIDIFromNotesList(m.generateMusic(100), "canonPlusHappyBirthday.mid")
+
+m.playNoteOneAtATime(64)
 
 
 
