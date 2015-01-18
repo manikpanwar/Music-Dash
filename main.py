@@ -21,7 +21,7 @@ class MusicDash(AnimationSkeleton):
 		self.margin = 50
 		self.numNotesAtATime = 100
 		self.m = MusicGenerator()
-		self.trainingFilePath = "/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1/happy_birthday.mid"
+		self.trainingFilePath = "/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/bartok"
 		self.m.train(self.trainingFilePath)
 		self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
 		self.board = Board().getBoard()
@@ -42,6 +42,9 @@ class MusicDash(AnimationSkeleton):
 		self.scoreThreshold = 0
 		self.meter = LifeMeter()
 		pygame.display.set_caption("Music-Dash !")
+		self.backgroundImage = pygame.image.load("vanishing1.jpg")
+		self.backgroundImage.convert_alpha()
+		self.backgroundRect = self.backgroundImage.get_rect()
 
 	def increaseVel(self, dx, dy):
 		if dx < 0: 
@@ -151,9 +154,12 @@ class MusicDash(AnimationSkeleton):
 		textpos.centery = self.margin
 		self.screen.blit(text, textpos)
 
+	def drawBackground(self):
+		self.screen.blit(self.backgroundImage, self.backgroundRect)
+
 	def dealWithBlitting(self):
 		self.screen.fill((255, 255, 255))
-
+		self.drawBackground()
 		for obj in self.objectsOnScreen:
 			obj.draw(self.screen)
 		self.meter.draw(self.screen)
@@ -206,5 +212,5 @@ class MusicDash(AnimationSkeleton):
 			self.clock.tick(self.FPS)
 
 		
-app = MusicDash()
-app.run()
+# app = MusicDash()
+# app.run()
