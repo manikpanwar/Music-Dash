@@ -17,6 +17,36 @@ class MusicDash(AnimationSkeleton):
         super(MusicDash, self).__init__()
         self.FPS = 30
 
+    @staticmethod
+    def getIntToNoteDict():
+        d = dict()
+        for val in xrange(128):
+            if val%12 == 0:
+                d[val] ="C"
+            elif val%12 == 1:
+                d[val] = "C#"
+            elif val%12 == 2:
+                d[val] = "D"
+            elif val%12 == 3:
+                d[val] = "D#"
+            elif val%12 == 4:
+                d[val] = "E"
+            elif val%12 == 5:
+                d[val] = "F"
+            elif val%12 == 6:
+                d[val] = "F#"
+            elif val%12 == 7:
+                d[val] = "G"
+            elif val%12 == 8:
+                d[val] = "G#"
+            elif val%12 == 9:
+                d[val] = "A"
+            elif val%12 == 10:
+                d[val] = "A#"
+            elif val%12 == 11:
+                d[val] = "B"
+        return d
+
     def initAnimation(self):
         self.margin = 50
         self.numNotesAtATime = 100
@@ -37,17 +67,18 @@ class MusicDash(AnimationSkeleton):
         self.rows = len(self.board)
         self.velocityKey = [(-1/(3**.5), 2), (0, 2), (2/(3**.5), 2)]
         self.addObjects()
-        self.end = False
+        self.end = self.noteHit = False
         self.score = 0
         self.combo = 0
         self.scoreThreshold = 0
+        self.intToNoteDict = MusicDash.getIntToNoteDict()
         self.meter = LifeMeter()
         pygame.display.set_caption("Music-Dash !")
         # self.backgroundImage = pygame.image.load("vanishing1.jpg")
         # self.backgroundImage.convert_alpha()
         # self.backgroundRect = self.backgroundImage.get_rect()
         self.bg = pygame.Surface(self.screen.get_size())
-        self.bg.fill((255, 255, 255))
+        self.bg.fill((66, 255, 35))
 
     def drawBg(self):
         screenX = self.width
@@ -114,9 +145,14 @@ class MusicDash(AnimationSkeleton):
                         self.score += 50
                     if not self.musicNotes:
                         self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
-                        self.combo = 0
                     self.m.playNoteOneAtATime(self.musicNotes[0])
+                    # print self.intToNoteDict[self.musicNotes[0]] # !!!
+                    # self.drawNoteNames()
+                    self.noteHit = True
                     self.musicNotes = self.musicNotes[1:]
+                elif type(obj) == Obstacle:
+                    # hit a rest 
+                    self.noteHit = False
                 self.meter.manageLife(obj)
                 self.objectsOnScreen = self.objectsOnScreen[:i] + self.objectsOnScreen[i+1:]
             else:
@@ -126,9 +162,18 @@ class MusicDash(AnimationSkeleton):
         if self.meter.checkGameOver():
             self.gameOver()
 
+    def drawNoteNames(self):
+        fontsize = 24
+        font = pygame.font.Font("RobotoCondensed-Regular.ttf", fontsize)
+        text = font.render("Last Note Hit: %s" % self.intToNoteDict[self.musicNotes[0]], 0, (0,0,0))
+        textpos = text.get_rect()
+        textpos.centerx = self.width-2*self.margin
+        textpos.centery = self.margin/2.0
+        self.screen.blit(text, textpos)
+
     def drawGameOver(self):
         fontSize = 30
-        font = pygame.font.Font(None, fontSize)
+        font = pygame.font.Font("RobotoCondensed-Regular.ttf", fontSize)
         text = font.render("Game Over!", 0, (0, 0, 0))
         textpos = text.get_rect()
         textpos.centerx = self.width/2.0
@@ -187,7 +232,7 @@ class MusicDash(AnimationSkeleton):
 
     def drawScore(self):
         fontSize = 24
-        font = pygame.font.Font(None, fontSize)
+        font = pygame.font.Font("RobotoCondensed-Regular.ttf", fontSize)
         text = font.render("Score: %d" % self.score, 0, (0, 0, 0))
         textpos = text.get_rect()
         textpos.centerx = self.width/2.0
@@ -206,6 +251,7 @@ class MusicDash(AnimationSkeleton):
         self.meter.draw(self.screen)
         self.player.draw(self.screen)
         self.drawScore()
+        if self.noteHit: self.drawNoteNames()
         if self.end: self.drawGameOver()
 
     def onKeyDown(self, event):

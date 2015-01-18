@@ -11,10 +11,10 @@ from main import MusicDash
 import thread
 
 def displayHelp():
-    GRAY = (128, 128, 128)
-    GREEN = (0, 128, 0)
+    GRAY = (255, 255, 255)
+    GREEN = (66, 255, 35)
     DARKGRAY = (64, 64, 64)
-    WHITE = (255, 255, 255)
+    WHITE = (0, 0, 255)
 
     # demension of screen
     screenX = 500
@@ -52,7 +52,8 @@ def displayHelp():
     xsmallFontSize = 12
     xmarginX = 40
     xsmallfontObj = pygame.font.Font('RobotoCondensed-Regular.ttf', xsmallFontSize)
-    howToPlay = '* The goal is to eat up as many coins and avoid as many blocks as possible. Eating coins increases your score and hitting blocks decreases your score \n * The coins you earned will generate beautiful sound and the blocks you hit harm the generated sound'
+    howToPlay = '* The goal is to gather as many music notes and avoid as many blocks as possible. Gathering music notes increases your score and hitting rests decreases your score \n\
+     * The music notes you collect will generate beautiful sound.'
     textBox = pygame.Rect(xmarginX, oriY + bigGap + xsmallGap, screenX - 2 * xmarginX, 200)
     textLong = textrect.render_textrect(howToPlay, xsmallfontObj, textBox, WHITE, GRAY)
     screen.blit(textLong, textBox)
@@ -93,8 +94,8 @@ def splash():
     pygame.init()
     pygame.font.init()
 
-    GRAY = (128, 128, 128)
-    GREEN = (0, 128, 0)
+    GRAY = (255, 255, 255)
+    GREEN = (66, 255, 35)
     BLUE = (0, 0, 255)
 
     # demension of screen
@@ -112,7 +113,7 @@ def splash():
     smallFontSize = 20
 
     fontObj = pygame.font.Font('RobotoCondensed-Regular.ttf', bigFontSize)
-    textSurfaceObj = fontObj.render('Runner Music Game v0.0!', True, GREEN, GRAY)
+    textSurfaceObj = fontObj.render('Music Dash!', True, GREEN, GRAY)
     textRectObj = textSurfaceObj.get_rect()
     offsetY = 70
     oriX = screenX // 2
@@ -122,18 +123,18 @@ def splash():
 
     bigGap = 50
     smallfontObj = pygame.font.Font('RobotoCondensed-Regular.ttf', smallFontSize)
-    textSurfaceObj = smallfontObj.render('New Game', True, BLUE, GRAY)
+    textSurfaceObj = smallfontObj.render('New Game(n)', True, BLUE, GRAY)
     textRectObj = textSurfaceObj.get_rect()
     textRectObj.center = (250, oriY + bigGap)
     screen.blit(textSurfaceObj, textRectObj)
 
     smallGap = 30
-    textSurfaceObj = smallfontObj.render('Help', True, BLUE, GRAY)
+    textSurfaceObj = smallfontObj.render('Help(h)', True, BLUE, GRAY)
     textRectObj = textSurfaceObj.get_rect()
     textRectObj.center = (250, oriY + bigGap + smallGap)
     screen.blit(textSurfaceObj, textRectObj)
 
-    textSurfaceObj = smallfontObj.render('Quit', True, BLUE, GRAY)
+    textSurfaceObj = smallfontObj.render('Quit(q)', True, BLUE, GRAY)
     textRectObj = textSurfaceObj.get_rect()
     textRectObj.center = (250, oriY + bigGap + smallGap * 2)
     screen.blit(textSurfaceObj, textRectObj)
