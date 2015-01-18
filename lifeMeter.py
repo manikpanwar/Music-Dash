@@ -31,6 +31,9 @@ class LifeMeter(object):
 		(pygame.draw.rect(self.meter, (0, 255, 255), 
 			(self.margin, self.margin, self.lifePoints, self.height-self.margin*2), 0))
 
+	def checkGameOver(self):
+		return self.lifePoints <= 0
+
 	def draw(self, surface):
 		self.drawBar()
 		surface.blit(self.meter, self.rect)

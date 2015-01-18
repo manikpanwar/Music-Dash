@@ -170,7 +170,7 @@ class MusicGenerator(object):
         # at this point could save matrix to text file
         # so don't have to train all the time
         
-    def playNoteOneAtATime(self, note, velocity = 127, tickVal = 150):
+    def playNoteOneAtATime(self, note, velocity = 127, tickVal = 1000):
         pattern = midi.Pattern()
         # Instantiate a MIDI Track (contains a list of MIDI events)
         track = midi.Track()

@@ -57,15 +57,15 @@ def displayHelp():
     textLong = textrect.render_textrect(howToPlay, xsmallfontObj, textBox, WHITE, GRAY)
     screen.blit(textLong, textBox)
 
-    textSurfaceObj = smallfontObj.render('How to download the music', True, DARKGRAY, GRAY)
-    textRectObj = textSurfaceObj.get_rect()
-    textRectObj.center = (130, oriY + 150)
-    screen.blit(textSurfaceObj, textRectObj)
+    # textSurfaceObj = smallfontObj.render('How to download the music', True, DARKGRAY, GRAY)
+    # textRectObj = textSurfaceObj.get_rect()
+    # textRectObj.center = (130, oriY + 150)
+    # screen.blit(textSurfaceObj, textRectObj)
 
-    howToD = '* Hit D on the keyboard to download'
-    textBox = pygame.Rect(xmarginX, oriY + 170, screenX - 2 * xmarginX, 200)
-    textLong = textrect.render_textrect(howToD, xsmallfontObj, textBox, WHITE, GRAY)
-    screen.blit(textLong, textBox)
+    # howToD = '* Hit D on the keyboard to download'
+    # textBox = pygame.Rect(xmarginX, oriY + 170, screenX - 2 * xmarginX, 200)
+    # textLong = textrect.render_textrect(howToD, xsmallfontObj, textBox, WHITE, GRAY)
+    # screen.blit(textLong, textBox)
 
     textSurfaceObj = smallfontObj.render('Back to Main Menu (B)', True, DARKGRAY, GRAY)
     textRectObj = textSurfaceObj.get_rect()

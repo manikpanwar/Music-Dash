@@ -9,6 +9,7 @@ from obstaclesAndMusicNotes import MusicNote
 from player	import Player
 from board import Board
 from lifeMeter import LifeMeter
+from musicGenerator import MusicGenerator
 
 class MusicDash(AnimationSkeleton):
 
@@ -18,6 +19,11 @@ class MusicDash(AnimationSkeleton):
 
 	def initAnimation(self):
 		self.margin = 50
+		self.numNotesAtATime = 100
+		self.m = MusicGenerator()
+		self.trainingFilePath = "/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1/happy_birthday.mid"
+		self.m.train(self.trainingFilePath)
+		self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
 		self.board = Board(10).getBoard()
 		self.nextBoard = Board(10).getBoard()
 		self.cx, self.cy = self.width/2.0, self.height/2.0
@@ -44,7 +50,10 @@ class MusicDash(AnimationSkeleton):
 				self.objectsOnScreen = self.objectsOnScreen[:i] + self.objectsOnScreen[i+1:]
 			elif self.player.isColliding(obj):
 				if type(obj) == MusicNote:
-					print "yo"
+					if not self.musicNotes:
+						self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
+					self.m.playNoteOneAtATime(self.musicNotes[0])
+					self.musicNotes = self.musicNotes[1:]
 					self.score += 10
 				self.meter.manageLife(obj)
 				self.objectsOnScreen = self.objectsOnScreen[:i] + self.objectsOnScreen[i+1:]
@@ -69,7 +78,6 @@ class MusicDash(AnimationSkeleton):
 		self.curRow = (self.curRow + 1) % 10
 
 	def onTick(self):
-
 		if not self.end:
 			self.counter += 1
 			if self.counter/30 > self.time:
@@ -77,6 +85,7 @@ class MusicDash(AnimationSkeleton):
 				if (self.endOfBoard()):
 					self.board = Board(10).getBoard()
 					self.addObjects()
+					self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
 				else:
 					self.addObjects()
 			# elif self.counter/10 > self.resizeManager:
@@ -95,22 +104,20 @@ class MusicDash(AnimationSkeleton):
 
 	def dealWithBlitting(self):
 		self.screen.fill((255, 255, 255))
-
 		for obj in self.objectsOnScreen:
 			obj.draw(self.screen)
 		self.meter.draw(self.screen)
 		self.player.draw(self.screen)
 
 	def onKeyDown(self, event):
-
 		if event.key == K_p: self.end = not(self.end)
 		elif event.key == K_s: 
 			for obj in self.objectsOnScreen:
 				obj.resize(self.FPS)
 
 	def run(self):
-
 		self.initAnimation()
+		pygame.display.set_caption("Music-Dash!")
 		while True:
 			# being able to hold down keys based on solution from stack overflow by qiao
 			keys = pygame.key.get_pressed()
@@ -146,6 +153,6 @@ class MusicDash(AnimationSkeleton):
 			self.clock.tick(self.FPS)
 
 		
-# app = MusicDash()
-# app.run()
+app = MusicDash()
+app.run()
 
