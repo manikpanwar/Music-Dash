@@ -7,6 +7,7 @@ from animationSkeleton import AnimationSkeleton
 from obstaclesAndMusicNotes import Obstacle, MusicNote
 from player	import Player
 from board import Board
+from musicGenerator import MusicGenerator
 
 class MusicDash(AnimationSkeleton):
 
@@ -16,28 +17,18 @@ class MusicDash(AnimationSkeleton):
 
 	def initAnimation(self):
 		self.margin = 50
-		self.board = Board().getBoard()
+		self.board = Board(10).getBoard()
 		self.cx, self.cy = self.width/2.0, self.height/2.0
-		# self.objectsOnScreen = [Obstacle(self.width/2.0, self.height/2.0, (1, 1)), MusicNote(self.width/2.0, self.height/2.0, (-1, 1))]
 		self.objectsOnScreen = []
 		self.player = Player(self.width/2.0, self.height - self.margin)
 		self.screen.fill((255, 255, 255))
-		self.counter = 100
+		self.counter = 50
 		self.time = 0
 		self.curRow = 0
 		self.cols = len(self.board[0])
 		self.rows = len(self.board)
 		self.velocityKey = [(-1/(3**.5), 2), (0, 2), (2/(3**.5), 2)]
-		# self.velocityKey = [(-1, 1), (0, 1), (1, 1)]
-
-	# def removeObjects(self):
-	# 	temp = []
-	# 	for i in xrange(len(self.objectsOnScreen)):
-	# 		obj = self.objectsOnScreen[i]
-	# 		if not(self.player.isColliding(obj)) or not(self.isOffScreen(obj)):
-	# 			temp.append(obj)
-	# 	self.objectsOnScreen = temp
-	# 	# print self.objectsOnScreen
+		self.end = False
 
 	def removeObjects(self):
 		i = 0
@@ -64,21 +55,26 @@ class MusicDash(AnimationSkeleton):
 				self.objectsOnScreen.append(MusicNote(self.cx, self.cy, self.velocityKey[col]))
 			elif self.board[self.curRow][col] == "obstacle":
 				self.objectsOnScreen.append(Obstacle(self.cx, self.cy, self.velocityKey[col]))
-
-			if col == 2:
-				print self.velocityKey[col]
-		# print self.objectsOnScreen
 		self.curRow += 1
+		print self.curRow
 
 	def onTick(self):
 
-		self.counter += 1
-		if self.counter/60 > self.time:
-			self.time += 1
-			self.addObjects()
-		self.moveObjects()
-		self.removeObjects()
-		self.dealWithBlitting()
+		if not self.end:
+			self.counter += 1
+			if self.counter/50 > self.time:
+				self.time += 1
+				if not(self.endOfBoard()):
+					self.addObjects()
+				else:
+					self.board = Board(10).getBoard()
+					self.curRow = 0
+			self.moveObjects()
+			self.removeObjects()
+			self.dealWithBlitting()
+
+	def endOfBoard(self):
+		return self.curRow == self.rows
 
 	def dealWithBlitting(self):
 		self.screen.fill((255, 255, 255))
@@ -87,12 +83,42 @@ class MusicDash(AnimationSkeleton):
 			obj.draw(self.screen)
 		self.player.draw(self.screen)
 
-	def onKeyDown(self, event): 
+	def run(self):
 
-		if event.key == K_LEFT: 
-			self.player.move(-10, 0)
-		elif event.key == K_RIGHT:
-			self.player.move(10, 0)
+		self.initAnimation()
+		while True:
+			# being able to hold down keys based on solution from stack overflow by qiao
+			keys = pygame.key.get_pressed()
+			if keys[K_LEFT]: 
+				self.player.move(-5, 0)
+			elif keys[K_RIGHT]:
+				self.player.move(5, 0)
+
+			# handles events
+			for event in pygame.event.get():
+				if event.type == QUIT:
+					pygame.quit()
+					sys.exit()
+
+				elif event.type == KEYDOWN:
+					self.onKeyDown(event)
+
+				elif event.type == KEYUP:
+					self.onKeyUp(event)
+
+				elif event.type == MOUSEBUTTONDOWN:
+					self.onMouseDown(event)
+
+				elif event.type == MOUSEMOTION:
+					self.onMouseMotion(event)
+
+				elif event.type == MOUSEBUTTONUP:
+					self.onMouseUp(event)
+
+			# handles timer dependent events
+			self.onTick()
+			pygame.display.update()
+			self.clock.tick(self.FPS)
 
 		
 app = MusicDash()

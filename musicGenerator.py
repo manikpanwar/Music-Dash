@@ -187,10 +187,10 @@ m = MusicGenerator()
 # m.trainMIDIFile("trainingMidiFiles/Beatles1HB.mid")
 # m.trainMIDIFileFromPath("trainingMidiFiles/happy_birthday.mid")
 
-# m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1")
-# soundFile = m.createMIDIFromNotesList(m.generateMusic(100), "canonPlusHappyBirthday.mid")
+m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/set1/happy_birthday.mid")
+soundFile = m.createMIDIFromNotesList(m.generateMusic(1000), "happyBirthday1.mid")
 
-m.playNoteOneAtATime(64)
+# m.playNoteOneAtATime(64)
 
 
 
