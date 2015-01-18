@@ -5,7 +5,8 @@ import pygame
 from pygame.locals import *
 import time
 import os, sys
-import helpGen
+from helpGen import HelpGen
+from main import MusicDash
 
 def splash():
     print('Splash load...')
@@ -68,7 +69,7 @@ def splash():
                 pygame.quit()
                 sys.exit()
             elif event.type == KEYUP and event.key == K_h:
-                helpGen.helpGen()
+                helpGen.HelpGen()
                 '''
                 screen_h = pygame.display.set_mode((screenX, screenY))
                 pygame.display.set_caption('General Help')
@@ -77,3 +78,6 @@ def splash():
                 '''
 
         pygame.display.update()
+
+
+splash()

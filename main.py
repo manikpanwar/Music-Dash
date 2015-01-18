@@ -7,7 +7,6 @@ from animationSkeleton import AnimationSkeleton
 from obstaclesAndMusicNotes import Obstacle, MusicNote
 from player	import Player
 from board import Board
-from musicGenerator import MusicGenerator
 
 class MusicDash(AnimationSkeleton):
 
