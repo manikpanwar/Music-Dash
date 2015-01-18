@@ -24,6 +24,9 @@ class LifeMeter(object):
 		else:
 			self.lifePoints = max(self.lifePoints-10, 0)
 
+	def checkGameOver(self):
+		return (self.lifePoints <= 0)
+
 	def drawBar(self): 
 		(pygame.draw.rect(self.meter, (255, 255, 255), 
 			(self.margin, self.margin, self.width-self.margin*2, self.height-self.margin*2), 0))

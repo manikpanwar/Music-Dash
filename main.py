@@ -41,6 +41,7 @@ class MusicDash(AnimationSkeleton):
 		self.score = 0
 		self.scoreThreshold = 0
 		self.meter = LifeMeter()
+		pygame.display.set_caption("Music-Dash !")
 
 	def increaseVel(self, dx, dy):
 		if dx < 0: 
@@ -78,6 +79,26 @@ class MusicDash(AnimationSkeleton):
 				self.objectsOnScreen = self.objectsOnScreen[:i] + self.objectsOnScreen[i+1:]
 			else:
 				i += 1
+
+		# Added Game Over Clause here!!
+		if self.meter.checkGameOver():
+			self.gameOver()
+
+	def drawGameOver(self):
+		fontSize = 30
+		font = pygame.font.Font(None, fontSize)
+		text = font.render("Game Over!", 0, (0, 0, 0))
+		textpos = text.get_rect()
+		textpos.centerx = self.width/2.0
+		textpos.centery = self.height/2.0
+		self.screen.blit(text, textpos)
+
+	def gameOver(self):
+		self.end = True
+		print "Game over"
+		self.board = []
+		self.objectsOnScreen = []
+		self.drawGameOver()
 
 	def isOffScreen(self, obj):
 		(x, y) = obj.getLoc()
@@ -124,7 +145,7 @@ class MusicDash(AnimationSkeleton):
 	def drawScore(self):
 		fontSize = 24
 		font = pygame.font.Font(None, fontSize)
-		text = font.render("%d" % self.score, 0, (0, 0, 0))
+		text = font.render("Score: %d" % self.score, 0, (0, 0, 0))
 		textpos = text.get_rect()
 		textpos.centerx = self.width/2.0
 		textpos.centery = self.margin
@@ -138,6 +159,7 @@ class MusicDash(AnimationSkeleton):
 		self.meter.draw(self.screen)
 		self.player.draw(self.screen)
 		self.drawScore()
+		if self.end: self.drawGameOver()
 
 	def onKeyDown(self, event):
 
