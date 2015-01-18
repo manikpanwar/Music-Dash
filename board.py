@@ -119,8 +119,10 @@ class Board(object):
         Board.print2dList(self.board)
 
     def numRows(self): return self.rows
-    
+
     def numCols(self): return self.cols
+
+    def getBoard(self): return self.board
 
     def __init__(self, rows = 50, columns = 3):
         self.rows, self.cols = rows, columns
