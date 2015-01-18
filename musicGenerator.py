@@ -192,12 +192,12 @@ class MusicGenerator(object):
         pygame.mixer.music.play()
 
 
-m = MusicGenerator()
+# m = MusicGenerator()
 # m.trainMIDIFile("trainingMidiFiles/Beatles1HB.mid")
 # m.trainMIDIFileFromPath("trainingMidiFiles/happy_birthday.mid")
 
-m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/furelise.mid")
-m.createMIDIFromNotesList(m.generateMusic(100), "furelise2.mid")
+# m.train("/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/MozartCMajor")
+# m.createMIDIFromNotesList(m.generateMusic(200), "mozartC1.mid")
 
 # m.playNoteOneAtATime(64)
 

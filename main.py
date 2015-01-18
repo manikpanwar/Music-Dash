@@ -21,7 +21,7 @@ class MusicDash(AnimationSkeleton):
 		self.margin = 50
 		self.numNotesAtATime = 100
 		self.m = MusicGenerator()
-		self.trainingFilePath = "/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/bartok"
+		self.trainingFilePath = "/Users/manikpanwar/Desktop/Manik/Git/Music-Dash/trainingMidiFiles/MozartCMajor"
 		self.m.train(self.trainingFilePath)
 		self.musicNotes = self.m.generateMusic(self.numNotesAtATime)
 		self.board = Board().getBoard()
@@ -181,9 +181,9 @@ class MusicDash(AnimationSkeleton):
 			# being able to hold down keys based on solution from stack overflow by qiao
 			keys = pygame.key.get_pressed()
 			if keys[K_LEFT]: 
-				self.player.move(-5, 0)
+				self.player.move(-8, 0)
 			elif keys[K_RIGHT]:
-				self.player.move(5, 0)
+				self.player.move(8, 0)
 
 			# handles events
 			for event in pygame.event.get():
