@@ -55,7 +55,7 @@ class MusicDash(AnimationSkeleton):
 			elif self.board[self.curRow][col] == "obstacle":
 				self.objectsOnScreen.append(Obstacle(self.cx, self.cy, self.velocityKey[col]))
 		self.curRow += 1
-		print self.curRow
+		# print self.curRow
 
 	def onTick(self):
 
@@ -83,7 +83,7 @@ class MusicDash(AnimationSkeleton):
 		self.player.draw(self.screen)
 
 	def run(self):
-
+		pygame.display.update()
 		self.initAnimation()
 		while True:
 			# being able to hold down keys based on solution from stack overflow by qiao
@@ -120,6 +120,6 @@ class MusicDash(AnimationSkeleton):
 			self.clock.tick(self.FPS)
 
 		
-app = MusicDash()
-app.run()
+# app = MusicDash()
+# app.run()
 
