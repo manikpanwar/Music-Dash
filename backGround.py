@@ -61,4 +61,4 @@ def foo():
                 sys.exit()
         pygame.display.update()
 
-foo()
+# foo()
